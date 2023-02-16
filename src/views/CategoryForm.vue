@@ -24,7 +24,7 @@ export default {
 		]),
 		submitHandler() {
 			if (this.$route.params.id) {
-				this.updateAuthorForm(this.authorForm);
+				this.updateCategoryForm(this.categoryForm);
 			} else {
 				this.postCategoryForm(this.categoryForm);
 			}
@@ -34,10 +34,15 @@ export default {
 		if (this.$route.params.id) {
 			this.fetchCategoryById(this.$route.params.id);
 			this.title = "Edit Category Information";
+		} else {
+			this.categoryForm = {
+				_id: "",
+				name: "",
+			};
 		}
 	},
 	watch: {
-		authorDetail: function () {
+		categoryDetail: function () {
 			if (this.$route.params.id) {
 				this.categoryForm = this.categoryDetail;
 			}

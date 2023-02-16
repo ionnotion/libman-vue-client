@@ -8,16 +8,20 @@ export default {
 		return {
 			title: "Add New Author",
 			authorForm: {
-                _id: "",
-                name: ""
-            },
+				_id: "",
+				name: "",
+			},
 		};
 	},
 	computed: {
 		...mapState(useRootStore, ["authorDetail"]),
 	},
 	methods: {
-		...mapActions(useRootStore, ["postAuthorForm","fetchAuthorById","updateAuthorForm"]),
+		...mapActions(useRootStore, [
+			"postAuthorForm",
+			"fetchAuthorById",
+			"updateAuthorForm",
+		]),
 		submitHandler() {
 			if (this.$route.params.id) {
 				this.updateAuthorForm(this.authorForm);
@@ -30,9 +34,14 @@ export default {
 		if (this.$route.params.id) {
 			this.fetchAuthorById(this.$route.params.id);
 			this.title = "Edit Author Information";
+		} else {
+			this.authorForm = {
+				_id: "",
+				name: "",
+			};
 		}
 	},
-    watch: {
+	watch: {
 		authorDetail: function () {
 			if (this.$route.params.id) {
 				this.authorForm = this.authorDetail;
