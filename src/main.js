@@ -1,14 +1,23 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp, markRaw } from "vue";
+import { createPinia } from "pinia";
 
-import App from './App.vue'
-import router from './router'
+import App from "./App.vue";
+import router from "./router";
 
-import './assets/main.css'
+import Swal from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+import "./assets/style.css";
 
-const app = createApp(App)
+const app = createApp(App);
+const pinia = createPinia();
 
-app.use(createPinia())
-app.use(router)
+pinia.use(({ store }) => {
+  store.router = markRaw(router);
+});
 
-app.mount('#app')
+app.use(Swal);
+
+app.use(router);
+app.use(pinia);
+
+app.mount("#app");
