@@ -28,7 +28,7 @@ export default {
 		<td>{{ book.amount }}</td>
 		<td>{{ book.amount - book.checkouts.length }}</td>
 		<td class="text-center" style="width: 12vw;">
-			<RouterLink class="btn btn-secondary m-2" :to="`/book/details/${book._id}`"
+			<RouterLink v-show="isLoggedIn" class="btn btn-secondary m-2" :to="`/book/details/${book._id}`"
 				>Details</RouterLink
 			>
 			<RouterLink

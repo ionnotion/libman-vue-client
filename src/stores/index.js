@@ -158,16 +158,19 @@ export const useRootStore = defineStore("root", {
 		},
 		async fetchBooks() {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.get(`${baseUrl}/book`);
 				this.books = data;
 			} catch (error) {
 				console.log(error);
+			} finally{
+				this.isLoading = false;
 			}
 		},
 		async fetchBookById(id) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.get(`${baseUrl}/book/${id}`);
-				// console.log(data)
 				this.bookDetail = {
 					...data,
 					author_id: data.author._id,
@@ -177,43 +180,58 @@ export const useRootStore = defineStore("root", {
 				};
 			} catch (error) {
 				console.log(error);
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async fetchAuthors() {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.get(`${baseUrl}/author`);
 				this.authors = data;
 			} catch (error) {
 				console.log(error);
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async fetchAuthorById(id) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.get(`${baseUrl}/author/${id}`);
 				console.log(data);
 				this.authorDetail = data;
 			} catch (error) {
 				console.log(error);
+			} finally {
+				this.isLoading = false
 			}
 		},
 		async fetchCategories() {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.get(`${baseUrl}/category`);
 				this.categories = data;
 			} catch (error) {
 				console.log(error);
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async fetchCategoryById(id) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.get(`${baseUrl}/category/${id}`);
 				this.categoryDetail = data;
 			} catch (error) {
 				console.log(error);
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async postBookForm(bookForm) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.post(`${baseUrl}/book`, bookForm, {
 					headers: {
 						Authorization: `bearer ${localStorage.getItem("access_token")}`,
@@ -237,11 +255,13 @@ export const useRootStore = defineStore("root", {
 					icon: "error",
 					text: response.data.message,
 				});
+			} finally{
+				this.isLoading = false
 			}
 		},
 		async updateBookForm(bookForm, id) {
 			try {
-				console.log(bookForm);
+				this.isLoading = true;
 				const { data } = await axios.put(
 					`${baseUrl}/book/${id}`,
 					{
@@ -273,11 +293,13 @@ export const useRootStore = defineStore("root", {
 					icon: "error",
 					text: response.data.message,
 				});
+			} finally {
+				this.isLoading = false
 			}
 		},
 		async checkoutBookHandler(book_id, user_id) {
-			try {
 				try {
+					this.isLoading = true;
 					const { data } = await axios.patch(
 						`${baseUrl}/book/checkout/${book_id}`,
 						{ id: user_id },
@@ -305,17 +327,13 @@ export const useRootStore = defineStore("root", {
 						icon: "error",
 						text: response.data.message,
 					});
+				} finally {
+					this.isLoading = false;
 				}
-			} catch (error) {
-				Swal.fire({
-					title: "An Error has occured...",
-					icon: "error",
-					text: error.message,
-				});
-			}
 		},
 		async returnBookHandler(book_id, checkout_id) {
 				try {
+					this.isLoading = true;
 					const { data } = await axios.patch(
 						`${baseUrl}/book/return/${book_id}`,
 						{ id: checkout_id },
@@ -343,10 +361,13 @@ export const useRootStore = defineStore("root", {
 						icon: "error",
 						text: response.data.message,
 					});
+				} finally {
+					this.isLoading = false;
 				}
 		},
 		async deleteBookHandler(book_id) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.delete(
 					`${baseUrl}/book/${book_id}`,
 					{
@@ -374,10 +395,13 @@ export const useRootStore = defineStore("root", {
 					icon: "error",
 					text: "Something went wrong...",
 				});
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async postAuthorForm({ name }) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.post(
 					`${baseUrl}/author`,
 					{ name },
@@ -408,10 +432,13 @@ export const useRootStore = defineStore("root", {
 					icon: "error",
 					text: response.data.message,
 				});
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async updateAuthorForm({ name, _id }) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.put(
 					`${baseUrl}/author/${_id}`,
 					{ name },
@@ -441,10 +468,13 @@ export const useRootStore = defineStore("root", {
 					icon: "error",
 					text: response.data.message,
 				});
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async postCategoryForm({ name }) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.post(
 					`${baseUrl}/category`,
 					{ name },
@@ -476,10 +506,13 @@ export const useRootStore = defineStore("root", {
 					icon: "error",
 					text: response.data.message,
 				});
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async updateCategoryForm({ name, _id }) {
 			try {
+				this.isLoading = true;
 				const { data } = await axios.put(
 					`${baseUrl}/category/${_id}`,
 					{ name },
@@ -509,6 +542,8 @@ export const useRootStore = defineStore("root", {
 					icon: "error",
 					text: response.data.message,
 				});
+			} finally {
+				this.isLoading = false;
 			}
 		},
 	},
