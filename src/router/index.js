@@ -8,7 +8,7 @@ import CategoryForm from '../views/CategoryForm.vue'
 import BookDetails from '../views/BookDetails.vue'
 import AuthorList from '../views/AuthorList.vue'
 import CategoryList from '../views/CategoryList.vue'
-
+import CheckoutForm from '../views/CheckoutForm.vue'
 
 
 const router = createRouter({
@@ -43,6 +43,11 @@ const router = createRouter({
       path: '/book/details/:id',
       name : 'bookDetails',
       component : BookDetails
+    },
+    {
+      path: '/book/details/checkout/:id',
+      name : 'bookCheckout',
+      component : CheckoutForm
     },
     {
       path: '/author',

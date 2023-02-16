@@ -26,7 +26,7 @@ export default {
 		<td>{{ book.author.name }}</td>
 		<td>{{ book.category.name }}</td>
 		<td>{{ book.amount }}</td>
-		<td>{{ book.amount - book.borrowedBy.length }}</td>
+		<td>{{ book.amount - book.checkouts.length }}</td>
 		<td class="text-center" style="width: 12vw;">
 			<RouterLink class="btn btn-secondary m-2" :to="`/book/details/${book._id}`"
 				>Details</RouterLink

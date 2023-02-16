@@ -78,14 +78,41 @@ export const useRootStore = defineStore("root", {
 		async postregister(payload) {
 			try {
 				this.isLoading = true;
-				await axios.post(`${baseUrl}/user/register`, {
-					username: payload.username,
-					email: payload.email,
-					password: payload.password,
-					firstName: payload.firstName,
-					lastName: payload.lastName,
-				});
+
+				let options = {};
+				if (this.isAdmin) {
+					options = {
+						headers: {
+							Authorization: `bearer ${localStorage.getItem("access_token")}`,
+						},
+					};
+				}
+
+				await axios.post(
+					`${baseUrl}/user/register`,
+					{
+						username: payload.username,
+						email: payload.email,
+						password: payload.password,
+						firstName: payload.firstName,
+						lastName: payload.lastName,
+					},
+					options
+				);
 				this.isLoading = false;
+
+				if (this.isLoggedIn) {
+					Swal.fire({
+						position: "top-end",
+						title: "Success!",
+						icon: "success",
+						text: `Register Succesful!`,
+						showConfirmButton: false,
+						timer: 1250,
+						timerProgressBar: true,
+					});
+					return this.router.push("/");
+				}
 
 				let result = await Swal.fire({
 					icon: "success",
@@ -181,7 +208,6 @@ export const useRootStore = defineStore("root", {
 		},
 		async postBookForm(bookForm) {
 			try {
-        console.log(bookForm,"<<<<<<<<<<")
 				const { data } = await axios.post(`${baseUrl}/book`, bookForm, {
 					headers: {
 						Authorization: `bearer ${localStorage.getItem("access_token")}`,
@@ -234,13 +260,95 @@ export const useRootStore = defineStore("root", {
 				});
 			}
 		},
+		async checkoutBookHandler(book_id, user_id) {
+			try {
+				try {
+					const { data } = await axios.patch(
+						`${baseUrl}/book/checkout/${book_id}`,
+						{ id: user_id },
+						{
+							headers: {
+								Authorization: `bearer ${localStorage.getItem("access_token")}`,
+							},
+						}
+					);
+
+					this.router.push(`/book/details/${book_id}`);
+
+					Swal.fire({
+						position: "top-end",
+						title: "Success!",
+						icon: "success",
+						text: `Book checkout success!`,
+						showConfirmButton: false,
+						timer: 1250,
+						timerProgressBar: true,
+					});
+				} catch ({ response }) {
+					Swal.fire({
+						title: "An Error has occured...",
+						icon: "error",
+						text: response.data.message,
+					});
+				}
+			} catch ({response}) {
+				Swal.fire({
+					title: "An Error has occured...",
+					icon: "error",
+					text: response.data.message,
+				});
+			}
+		},
+		async returnBookHandler(book_id, checkout_id) {
+			try {
+				try {
+					const { data } = await axios.patch(
+						`${baseUrl}/book/return/${book_id}`,
+						{ id: checkout_id },
+						{
+							headers: {
+								Authorization: `bearer ${localStorage.getItem("access_token")}`,
+							},
+						}
+					);
+
+					this.fetchBookById(book_id)
+
+					Swal.fire({
+						position: "top-end",
+						title: "Success!",
+						icon: "success",
+						text: `Book return success!`,
+						showConfirmButton: false,
+						timer: 1250,
+						timerProgressBar: true,
+					});
+				} catch ({ response }) {
+					Swal.fire({
+						title: "An Error has occured...",
+						icon: "error",
+						text: response.data.message,
+					});
+				}
+			} catch ({response}) {
+				Swal.fire({
+					title: "An Error has occured...",
+					icon: "error",
+					text: response.data.message,
+				});
+			}
+		},
 		async postAuthorForm({ name }) {
 			try {
-				const { data } = await axios.post(`${baseUrl}/author`, {name}, {
-					headers: {
-						Authorization: `bearer ${localStorage.getItem("access_token")}`,
-					},
-				});
+				const { data } = await axios.post(
+					`${baseUrl}/author`,
+					{ name },
+					{
+						headers: {
+							Authorization: `bearer ${localStorage.getItem("access_token")}`,
+						},
+					}
+				);
 
 				this.router.push("/");
 
@@ -264,13 +372,17 @@ export const useRootStore = defineStore("root", {
 				});
 			}
 		},
-    async updateAuthorForm({name, _id}) {
+		async updateAuthorForm({ name, _id }) {
 			try {
-				const { data } = await axios.put(`${baseUrl}/author/${_id}`, {name}, {
-					headers: {
-						Authorization: `bearer ${localStorage.getItem("access_token")}`,
-					},
-				});
+				const { data } = await axios.put(
+					`${baseUrl}/author/${_id}`,
+					{ name },
+					{
+						headers: {
+							Authorization: `bearer ${localStorage.getItem("access_token")}`,
+						},
+					}
+				);
 
 				this.router.push("/");
 
@@ -293,13 +405,17 @@ export const useRootStore = defineStore("root", {
 				});
 			}
 		},
-		async postCategoryForm({name}) {
+		async postCategoryForm({ name }) {
 			try {
-				const { data } = await axios.post(`${baseUrl}/category`, {name}, {
-					headers: {
-						Authorization: `bearer ${localStorage.getItem("access_token")}`,
-					},
-				});
+				const { data } = await axios.post(
+					`${baseUrl}/category`,
+					{ name },
+					{
+						headers: {
+							Authorization: `bearer ${localStorage.getItem("access_token")}`,
+						},
+					}
+				);
 
 				this.router.push("/");
 
@@ -324,13 +440,17 @@ export const useRootStore = defineStore("root", {
 				});
 			}
 		},
-    async updateCategoryForm({name,_id}) {
+		async updateCategoryForm({ name, _id }) {
 			try {
-				const { data } = await axios.put(`${baseUrl}/category/${_id}`, {name}, {
-					headers: {
-						Authorization: `bearer ${localStorage.getItem("access_token")}`,
-					},
-				});
+				const { data } = await axios.put(
+					`${baseUrl}/category/${_id}`,
+					{ name },
+					{
+						headers: {
+							Authorization: `bearer ${localStorage.getItem("access_token")}`,
+						},
+					}
+				);
 
 				this.router.push("/");
 

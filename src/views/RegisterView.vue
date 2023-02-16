@@ -24,9 +24,11 @@ export default {
   },
   created() {
     this.registerForm = {
-        username : '',
-        email : '',
-        password : ''
+        username : "",
+        email : "",
+        password : "",
+		firstName: "",
+		lastName: ""
     }
   }
 }
@@ -49,7 +51,6 @@ export default {
 							v-model="registerForm.username"
 						/>
 					</div>
-
 					<div class="form-group mt-3">
 						<label for="register-email">Email address</label>
 						<input
@@ -71,7 +72,28 @@ export default {
 							v-model="registerForm.password"
 						/>
 					</div>
-
+					<div class="form-group mt-3">
+						<label for="register-username">First Name</label>
+						<input
+							type="text"
+							class="form-control"
+							id="register-username"
+							aria-describedby="emailHelp"
+							placeholder="Username..."
+							v-model="registerForm.firstName"
+						/>
+					</div>
+					<div class="form-group mt-3">
+						<label for="register-username">Last Name</label>
+						<input
+							type="text"
+							class="form-control"
+							id="register-username"
+							aria-describedby="emailHelp"
+							placeholder="Username..."
+							v-model="registerForm.lastName"
+						/>
+					</div>
 					<CustomButton
 						:name="'Register'"
 						:type="'submit'"

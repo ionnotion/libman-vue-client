@@ -6,20 +6,13 @@ export default {
 	name: "BookDetails",
 	data() {
 		return {
-			bookForm: {
-				title: "",
-				author: {},
-				summary: "",
-				category: {},
-				amount: 1,
-			},
 		};
 	},
 	computed: {
 		...mapState(useRootStore, ["bookDetail"]),
 	},
 	methods: {
-		...mapActions(useRootStore, ["fetchBookById"]),
+		...mapActions(useRootStore, ["fetchBookById","returnBookHandler"]),
 	},
 	created() {
 		if (this.$route.params.id) {
@@ -38,17 +31,21 @@ export default {
 						<h6>Title:</h6>
 						<p>{{ bookDetail.title }}</p>
 						<h6>Author:</h6>
-						<p>{{ bookDetail.author.name }}</p>
+						<p>{{ bookDetail?.author?.name }}</p>
 					</div>
 					<div class="m-4">
 						<h6>Category:</h6>
-						<p>{{ bookDetail.category.name }}</p>
+						<p>{{ bookDetail?.category?.name }}</p>
 						<h6>Stock:</h6>
-						<p>{{ bookDetail.amount }}</p>
+						<p>{{ bookDetail.amount - bookDetail?.checkouts?.length }} / {{ bookDetail.amount }}</p>
 					</div>
 				</div>
 				<div class="d-flex flex-column p-4">
-					<button class="btn m-2 btn-success">Checkout</button>
+					<RouterLink
+						:to="`/book/details/checkout/${$route.params.id}`"
+						class="btn m-2 btn-success"
+						>Checkout</RouterLink
+					>
 					<button class="btn m-2 btn-danger">Delete</button>
 				</div>
 			</div>
@@ -63,14 +60,18 @@ export default {
 						<tr>
 							<th scope="col">No.</th>
 							<th scope="col">Username</th>
+							<th scope="col">Checkout Date</th>
+							<th scope="col">Due Date</th>
 							<th scope="col"></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="user in bookDetail.borrowedBy">
-							<th scope="col"></th>
-							<td>{{ user.username }}</td>
-							<td>{{ user._id }}</td>
+						<tr v-for="(checkout, index) in bookDetail.checkouts">
+							<th scope="col">{{ index + 1 }}</th>
+							<td>{{ checkout.username }}</td>
+							<td>{{ new Date(checkout.checkoutDate).toDateString() }}</td>
+							<td>{{ new Date(checkout.dueDate).toDateString() }}</td>
+							<td><button @click="returnBookHandler($route.params.id,checkout._id)" class="btn btn-sm btn-primary">Return</button></td>
 						</tr>
 					</tbody>
 				</table>
