@@ -23,8 +23,8 @@ export default {
 	<tr :class="background">
 		<th scope="row">{{ index + 1 }}.</th>
 		<td>{{ book.title }}</td>
-		<td>{{ book.author.name }}</td>
-		<td>{{ book.category.name }}</td>
+		<td>{{ book?.author?.name }}</td>
+		<td>{{ book?.category?.name }}</td>
 		<td>{{ book.amount }}</td>
 		<td>{{ book.amount - book.checkouts.length }}</td>
 		<td class="text-center" style="width: 12vw;">

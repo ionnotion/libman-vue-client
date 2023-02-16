@@ -10,9 +10,13 @@ export default {
 			title: "Add New Book",
 			bookForm: {
 				title: "",
-				author: "",
+				author: {},
+				author_id:"",
+				author_name:"",
 				summary: "",
-				category: "",
+				category: {},
+				category_id: "",
+				category_name:"",
 				amount: 1,
 			},
 		};
@@ -71,14 +75,14 @@ export default {
 						<input type="text" class="form-control" v-model="bookForm.title" />
 
 						<label class="form-label">Author</label>
-						<select class="form-select" v-model="bookForm.author">
+						<select class="form-select" v-model="bookForm.author_id">
 							<option v-for="author in authors" :value="author._id">
 								{{ author.name }}
 							</option>
 						</select>
 
 						<label class="form-label">Category</label>
-						<select class="form-select" v-model="bookForm.category">
+						<select class="form-select" v-model="bookForm.category_id">
 							<option v-for="category in categories" :value="category._id">
 								{{ category.name }}
 							</option>

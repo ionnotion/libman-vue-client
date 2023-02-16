@@ -168,7 +168,13 @@ export const useRootStore = defineStore("root", {
 			try {
 				const { data } = await axios.get(`${baseUrl}/book/${id}`);
 				// console.log(data)
-				this.bookDetail = data;
+				this.bookDetail = {
+					...data,
+					author_id: data.author._id,
+					author_name: data.author.name,
+					category_id: data.category._id,
+					category_name: data.category.name,
+				};
 			} catch (error) {
 				console.log(error);
 			}
@@ -235,11 +241,20 @@ export const useRootStore = defineStore("root", {
 		},
 		async updateBookForm(bookForm, id) {
 			try {
-				const { data } = await axios.put(`${baseUrl}/book/${id}`, bookForm, {
-					headers: {
-						Authorization: `bearer ${localStorage.getItem("access_token")}`,
+				console.log(bookForm);
+				const { data } = await axios.put(
+					`${baseUrl}/book/${id}`,
+					{
+						...bookForm,
+						author: bookForm.category._id,
+						category: bookForm.category._id,
 					},
-				});
+					{
+						headers: {
+							Authorization: `bearer ${localStorage.getItem("access_token")}`,
+						},
+					}
+				);
 
 				this.router.push("/");
 
@@ -291,16 +306,15 @@ export const useRootStore = defineStore("root", {
 						text: response.data.message,
 					});
 				}
-			} catch ({response}) {
+			} catch (error) {
 				Swal.fire({
 					title: "An Error has occured...",
 					icon: "error",
-					text: response.data.message,
+					text: error.message,
 				});
 			}
 		},
 		async returnBookHandler(book_id, checkout_id) {
-			try {
 				try {
 					const { data } = await axios.patch(
 						`${baseUrl}/book/return/${book_id}`,
@@ -312,7 +326,7 @@ export const useRootStore = defineStore("root", {
 						}
 					);
 
-					this.fetchBookById(book_id)
+					this.fetchBookById(book_id);
 
 					Swal.fire({
 						position: "top-end",
@@ -330,11 +344,35 @@ export const useRootStore = defineStore("root", {
 						text: response.data.message,
 					});
 				}
-			} catch ({response}) {
+		},
+		async deleteBookHandler(book_id) {
+			try {
+				const { data } = await axios.delete(
+					`${baseUrl}/book/${book_id}`,
+					{
+						headers: {
+							Authorization: `bearer ${localStorage.getItem("access_token")}`,
+						},
+					}
+				);
+				
+				this.router.push(`/`);
+				this.fetchBooks();
+
+				Swal.fire({
+					position: "top-end",
+					title: "Success!",
+					icon: "success",
+					text: `Delete book success!`,
+					showConfirmButton: false,
+					timer: 1250,
+					timerProgressBar: true,
+				});
+			} catch (error) {
 				Swal.fire({
 					title: "An Error has occured...",
 					icon: "error",
-					text: response.data.message,
+					text: "Something went wrong...",
 				});
 			}
 		},

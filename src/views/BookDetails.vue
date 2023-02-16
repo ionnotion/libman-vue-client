@@ -5,14 +5,16 @@ import { useRootStore } from "../stores";
 export default {
 	name: "BookDetails",
 	data() {
-		return {
-		};
+		return {};
 	},
 	computed: {
-		...mapState(useRootStore, ["bookDetail"]),
+		...mapState(useRootStore, ["bookDetail", "isAdmin"]),
+		remaining() {
+			return this.bookDetail.amount - this.bookDetail?.checkouts?.length;
+		},
 	},
 	methods: {
-		...mapActions(useRootStore, ["fetchBookById","returnBookHandler"]),
+		...mapActions(useRootStore, ["fetchBookById", "returnBookHandler","deleteBookHandler"]),
 	},
 	created() {
 		if (this.$route.params.id) {
@@ -37,16 +39,37 @@ export default {
 						<h6>Category:</h6>
 						<p>{{ bookDetail?.category?.name }}</p>
 						<h6>Stock:</h6>
-						<p>{{ bookDetail.amount - bookDetail?.checkouts?.length }} / {{ bookDetail.amount }}</p>
+						<p>{{ remaining }} / {{ bookDetail.amount }}</p>
 					</div>
 				</div>
 				<div class="d-flex flex-column p-4">
 					<RouterLink
+						:to="`/book/edit/${$route.params.id}`"
+						class="btn m-2 btn-primary"
+						>Edit</RouterLink
+					>
+					<RouterLink
+						v-if="remaining > 0"
 						:to="`/book/details/checkout/${$route.params.id}`"
 						class="btn m-2 btn-success"
 						>Checkout</RouterLink
 					>
-					<button class="btn m-2 btn-danger">Delete</button>
+					<button v-if="remaining <= 0" class="btn m-2 btn-secondary">
+						Checkout
+					</button>
+					<button
+						v-if="remaining !== bookDetail.amount"
+						class="btn m-2 btn-secondary"
+					>
+						Delete
+					</button>
+					<button
+						v-if="remaining === bookDetail.amount"
+						class="btn m-2 btn-danger"
+						@click="deleteBookHandler(bookDetail._id)"
+					>
+						Delete
+					</button>
 				</div>
 			</div>
 			<div class="card-body">
@@ -71,7 +94,14 @@ export default {
 							<td>{{ checkout.username }}</td>
 							<td>{{ new Date(checkout.checkoutDate).toDateString() }}</td>
 							<td>{{ new Date(checkout.dueDate).toDateString() }}</td>
-							<td><button @click="returnBookHandler($route.params.id,checkout._id)" class="btn btn-sm btn-primary">Return</button></td>
+							<td v-show="isAdmin">
+								<button
+									@click="returnBookHandler($route.params.id, checkout._id)"
+									class="btn btn-sm btn-primary"
+								>
+									Return
+								</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>

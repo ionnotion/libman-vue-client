@@ -34,5 +34,4 @@ export default {
 			/>
 		</tbody>
 	</table>
-	<p v-show="books.length < 1" class="text-center my-4">Use search bar on top to start searching...</p>
 </template>

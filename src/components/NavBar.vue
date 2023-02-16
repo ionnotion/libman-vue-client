@@ -14,7 +14,7 @@ export default {
 		RouterLink,
 	},
 	methods: {
-		...mapActions(useRootStore, ["logout"]),
+		...mapActions(useRootStore, ["logout","checkCredentials"]),
 	},
 	computed: {
 		...mapState(useRootStore, ["isLoggedIn", "isAdmin"]),
@@ -29,6 +29,9 @@ export default {
 			this.displayName = localStorage.getItem(`username`);
 		}
 	},
+	mounted() {
+		this.checkCredentials()
+	}
 };
 </script>
 
