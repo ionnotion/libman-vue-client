@@ -28,7 +28,7 @@ export default {
 </script>
 
 <template>
-  <div class="card container mt-5 p-0 rounded">
+  <div class="card container mt-5 p-0 rounded" style="width:42rem;">
     <div class="card-body bg-secondary">
       <section class="mx-3">
         <form @submit.prevent="postLogin(loginForm)">
