@@ -15,7 +15,6 @@ export default {
 	},
 	computed: {
 		...mapWritableState(useRootStore, [
-			"isVerified",
 			"isLoggedIn",
 			"isLoading",
 		]),
@@ -23,7 +22,6 @@ export default {
 	created() {
 		if (localStorage.getItem("access_token")) {
 			this.isLoggedIn = true;
-			this.isVerified = localStorage.getItem("verified");
 		}
 	},
 };

@@ -30,7 +30,7 @@ export const useRootStore = defineStore("root", {
 			if (localStorage.getItem("access_token")) {
 				this.setLoggedIn();
 			}
-			if (localStorage.getItem("isAdmin")) {
+			if (localStorage.getItem("isAdmin") !== "false") {
 				this.setAdmin();
 			}
 		},
@@ -49,11 +49,15 @@ export const useRootStore = defineStore("root", {
 					password: payload.password,
 				});
 
+				
 				localStorage.setItem(`access_token`, data.access_token);
 				this.setCredential(data);
-
+				
 				this.isLoggedIn = true;
 				this.isAdmin = data.isAdmin;
+				
+				console.log(data.isAdmin,"<<<<<<<<< Data")
+				console.log(this.isAdmin,"<<<<<<<<< Store")
 				this.router.push("/");
 
 				Swal.fire({
@@ -150,6 +154,7 @@ export const useRootStore = defineStore("root", {
 				timer: 1250,
 				timerProgressBar: true,
 			});
+			this.isAdmin = false
 			this.isLoggedIn = false;
 			this.router.push("/");
 		},
